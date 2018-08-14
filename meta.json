@@ -1,0 +1,35 @@
+{
+  "prompts": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "label": "Project NPM name"
+    },
+    "packageId": {
+      "type": "string",
+      "required": true,
+      "label": "App package ID",
+      "default": "me.i38.myapp"
+    },    
+    "productZH": {
+      "type": "string",
+      "required": true,
+      "label": "App name in ZH-CN",
+      "default": "vue应用"
+    },
+    "productEN": {
+      "type": "string",
+      "required": true,
+      "label": "App name in EN-US",
+      "default": "vue app"
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "label": "App description",
+      "default": "A cordova vue app"
+    }
+
+  },
+  "completeMessage": "To get started:\n\n  cd {{destDirName}}\n  build prepare\n  build dev"
+}

@@ -1,0 +1,10 @@
+{
+	"config_ios": {
+		"NSCameraUsageDescription": "{{productZH}}",
+		"CFBundleDisplayName": "{{productZH}}",
+		"CFBundleName": "{{productZH}}"
+	},
+	"config_android": {
+		"app_name": "{{productZH}}"
+	}
+}

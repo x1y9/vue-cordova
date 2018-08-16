@@ -25,6 +25,6 @@ export default new VueRouter({
     // 这里使用import的方式是动态加载，如果在文件头import就是静态加载
     { path: '/', component: () => import('app/home') },
 
-    { path: '*', component: () => import('components/Error404') }
+    { path: '*', component: () => import('components/404') }
   ]
 })

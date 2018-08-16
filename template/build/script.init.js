@@ -17,7 +17,7 @@ else {
   if (shell.test('-d',androidPath)) {
     spawn.sync('npm',['install'], path.resolve(__dirname, '../cordova'))
     fse.copySync(
-      path.resolve(__dirname, '../cordova/release-signing.properties'), 
+      path.resolve(__dirname, '../cordova/release-signing.sample'), 
       path.resolve(__dirname, '../cordova/platforms/android/release-signing.properties')
     )
     console.log('Modify ' + 'cordova/platforms/android/release-signing.properties'.yellow + ' for apk sign.')

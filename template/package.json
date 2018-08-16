@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "private": true,
   "description": "{{ description }}",
-  "author": "{{ authorEmail }}",
+  "author": "",
   "scripts": {
     "clean": "node build/script.clean.js",
-    "prepare": "node build/script.prepare.js",
+    "init": "node build/script.init.js",
     "dev": "node build/script.dev.js",
     "build": "node build/script.build.js",
     "cordova": "node build/script.cordova.js",

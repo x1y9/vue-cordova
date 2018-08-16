@@ -21,19 +21,17 @@
 @goto end
 
 :do_prepare
-@REM 准备构建需要的库, 会自动运行prepare script
+@REM 准备构建需要的库
 call yarn
 @IF %ERRORLEVEL% NEQ 0 goto error_end
+call npm run init
 @REM 删除巨大的spalsh文件，不能删目录，因为有些插件需要把资源写入drawable
-@for /d %%a in ("cordova\platforms\android\res\drawable*") do del "%%~a\screen.png"
+@for /d %%a in ("cordova\platforms\android\res\drawable*") do del "%%~a\screen.png" > nul 2>&1
 @goto end
 
 :do_debug
-start npm run dev
-call npm run cordova
-@goto end
-
-:do_publish
+start npm run dev %2
+call npm run cordova android
 @goto end
 
 :do_release

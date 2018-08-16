@@ -2,7 +2,7 @@
 <widget id="{{packageId}}" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>{{productEN}}</name>
     <description>{{ description }}</description>
-    <author email="" href=""></author>
+    <author email="" href="" />
     <icon src="../src/assets/icon.png" />
     <content src="index.html" />
     <access origin="*" />

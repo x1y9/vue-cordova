@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'development'
+process.env.THEME = process.argv[2] || ''
 
 require('colors')
 

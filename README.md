@@ -5,6 +5,7 @@
 * 无论debug或release模式，均可直接安装到手机，如果版本不兼容，自动卸载
 * 单命令修改版本号，可升级大小版本号
 * 基于最佳实践，集成vue-router, vuex, vue-i18n
+* 集成lodash的部分js增加功能
 * 方便集成各种基于vue的ui库
 * 生成的apk支持多语言，应用名称也可以配置为多语言
 * 优化android版本apk大小，release版本仅200k

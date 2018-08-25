@@ -30,8 +30,8 @@ call npm run init
 @goto end
 
 :do_debug
-start npm run dev %2
 call npm run cordova android
+echo if dev server not running, using `build dev` to start it.
 @goto end
 
 :do_release

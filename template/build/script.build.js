@@ -16,6 +16,12 @@ var
   webpackConfig = require('./webpack.prod.conf'),
   targetPath = webpackConfig.output.path
 
+if (env.android && !shell.test('-f', path.resolve(__dirname, `../cordova/platforms/android/release-signing.properties`))) {
+  console.log('Please modify ' + 'cordova/release-signing.sample'.yellow
+  + ', then copy to ' + 'cordova/platforms/android/release-signing.properties'.yellow + ' for apk sign.')
+  process.exit()
+}
+
 shell.rm('-rf', targetPath)
 console.log(' Cleaned build artifacts.\n')
   

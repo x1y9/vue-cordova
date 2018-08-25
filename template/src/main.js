@@ -15,7 +15,7 @@ Vue.use(VueI18n)
 
 // 安装loadash
 // import lodash from 'lodash'
-// Vue.prototype.$_ = lodash
+Vue.prototype.$invoke = require('lodash/invoke')
 
 // icon：material很多图标不能在android4.4显示，fontawesome比ionicons大些
 

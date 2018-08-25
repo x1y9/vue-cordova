@@ -7,10 +7,10 @@
 build prepare
 
 # 编译一个支持热部署的android版本并下载到手机，在运行后会连接dev服务器并支持hot reload
-# 在编译之前，先修改cordova/platform/android下release-signing.properties，配置release版本签名文件
 build debug
 
 # 编译一个android release版本，如果usb连接手机，会自动安装
+# 在编译release之前，先修改cordova/platform/android下release-signing.properties，配置release版本签名文件
 build release
 
 # 发布正式版本前，修改小版本号，可加major,minor参数修改大版本号

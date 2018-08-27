@@ -49,10 +49,13 @@ function finalize () {
     console.log('Release apk file: ' + targetApk.yellow)
 
     let devices = spawn.getOutput('adb',['devices'])
+    console.log(devices.stdout)
     if (devices.stdout.match(/device$/)) {
       console.log('try to install apk to device')
       let result = spawn.getOutput('adb',['install','-r',targetApk])
-      if (result.stdout.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE]') != -1) {
+      console.log(result.stderr)
+      if (result.stdout.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ||
+          result.stderr.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ) {
         console.log("apk INCOMPATIBLE, uninstall and reinstall...")
         spawn.sync('adb',['uninstall',packageId])
         spawn.sync('adb',['install', '-r', targetApk])

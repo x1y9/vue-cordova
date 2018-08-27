@@ -9,7 +9,7 @@
       "type": "string",
       "required": true,
       "label": "App package ID",
-      "default": "me.i38.myapp"
+      "default": "me.i38.app"
     },    
     "productZH": {
       "type": "string",

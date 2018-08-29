@@ -5,6 +5,8 @@
 		"CFBundleName": "{{productZH}}"
 	},
 	"config_android": {
-		"app_name": "{{productZH}}"
+    "app_name": "{{productZH}}",
+    "launcher_name": "@string/app_name",
+    "activity_name": "@string/launcher_name"
 	}
 }

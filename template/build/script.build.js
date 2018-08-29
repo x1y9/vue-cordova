@@ -43,8 +43,22 @@ function finalize () {
     spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
 
     let targetApk = packageId + '-' + packageVer + '.apk'
+    let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-release.apk'
+   
+    //兼容处理cordova-android 6.3/6.4/7.x
+    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+      sourceApk = '../cordova/platforms/android/build/outputs/apk/release/android-release.apk'
+    }
+    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+      sourceApk = '../cordova/platforms/android/app/build/outputs/apk/release/app-release.apk'
+    }
+    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+      console.log('Release apk not found, check build errors')
+      process.exit()
+    }
+
     fse.copySync(
-      path.resolve(__dirname, '../cordova/platforms/android/build/outputs/apk/android-release.apk'), 
+      path.resolve(__dirname, sourceApk), 
       path.resolve(__dirname, '../' + targetApk))
     console.log('Release apk file: ' + targetApk.yellow)
 

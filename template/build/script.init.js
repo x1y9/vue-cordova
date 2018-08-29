@@ -12,7 +12,7 @@ if (shell.test('-d',androidPath)) {
 else {  
   shell.mkdir('-p', path.resolve(__dirname, '../cordova/www'))
   //cordova命令永远不会返回非0，所以下面的命令不会出错退出
-  spawn.sync('cordova',['platform','add','android'], path.resolve(__dirname, '../cordova'))
+  spawn.sync('cordova',['platform','add','android@{{ cordovaAndroidVer }}'], path.resolve(__dirname, '../cordova'))
 
   if (shell.test('-d',androidPath)) {
     spawn.sync('npm',['install'], path.resolve(__dirname, '../cordova'))

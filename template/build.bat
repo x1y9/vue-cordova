@@ -25,8 +25,9 @@
 call yarn
 @IF %ERRORLEVEL% NEQ 0 goto error_end
 call npm run init
-@REM 删除巨大的spalsh文件，不能删目录，因为有些插件需要把资源写入drawable
+@REM 删除巨大的spalsh文件，不能删目录，因为有些插件需要把资源写入drawable，兼容cordova-andoid 6.3,6.4,7.0
 @for /d %%a in ("cordova\platforms\android\res\drawable*") do del "%%~a\screen.png" > nul 2>&1
+@for /d %%a in ("cordova\platforms\android\app\src\main\res\drawable*") do del "%%~a\screen.png" > nul 2>&1
 @goto end
 
 :do_debug

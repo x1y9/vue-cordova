@@ -4,6 +4,7 @@
 @if  "%1"=="prepare" goto do_prepare
 @if  "%1"=="debug" goto do_debug
 @if  "%1"=="release" goto do_release
+@if  "%1"=="picture" goto do_picture
 
 @if  "%1"=="version" goto do_npm
 @if  "%1"=="dev" goto do_npm
@@ -14,7 +15,7 @@
 :do_help
 @echo.
 @echo build script for cordova-vue project
-@echo usage: build [prepare^|dev^|build^|debug^|release^|version^|clean]
+@echo usage: build [prepare^|dev^|build^|debug^|release^|version^|clean^|picture]
 @echo.
 @echo For destkop: using dev and build
 @echo For android: using debug, release
@@ -43,6 +44,14 @@ call npm run android %2
 :do_npm
 call npm run %1 %2
 @IF %ERRORLEVEL% NEQ 0 goto error_end
+@goto end
+
+:do_picture
+convert src\assets\icon.png -resize 512x publish\icon512.png
+convert -size 1024x500  radial-gradient:#8c8ca4-#232050 ~bg.png
+convert src\assets\icon.png -background none -pointsize 36 -size 480x -fill "#e7e7e7" -gravity center caption:"App slogan" -append ~slogan.png
+composite -gravity center ~slogan.png ~bg.png publish\feature.jpg
+del ~bg.png ~slogan.png
 @goto end
 
 :error_end

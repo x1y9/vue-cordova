@@ -14,6 +14,11 @@ var
  
  
 if (shell.test('-d', path.resolve(__dirname, `../cordova/platforms/${process.env.CORDOVA_TARGET}`))) {
+  let configFile = path.resolve(__dirname, '../cordova/config.xml')
+  let doc = et.parse(fs.readFileSync(configFile, 'utf-8'))
+  let packageId = doc.getroot().get('id')
+  let icon = doc.getroot().find('icon')
+
   if (env.android) {
     var devices = spawn.getOutput('adb',['devices'])
     hasPhone = devices.stdout.match(/device$/)
@@ -25,20 +30,15 @@ if (shell.test('-d', path.resolve(__dirname, `../cordova/platforms/${process.env
   }
   
   if (hasPhone) {
-    let configFile = path.resolve(__dirname, '../cordova/config.xml')
-    let doc = et.parse(fs.readFileSync(configFile, 'utf-8'))
-    let packageId = doc.getroot().get('id')
-    let icon = doc.getroot().find('icon')
-
     console.log("set cordova config file remote ip:" + ip.address())
     fse.copySync(configFile, configFile + '.temp')
     doc.getroot().find('content').set('src', 'http://' + ip.address() + ':8080')
     if (env.ios) {
       doc.getroot().remove(icon)
+      spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
     }
     fs.writeFileSync(configFile, doc.write({ indent: 4 }), 'utf8')
 
-    spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
     spawn.sync('cordova',['run', process.env.CORDOVA_TARGET], path.resolve(__dirname, '../cordova'))
 
     console.log("restore cordova config file")

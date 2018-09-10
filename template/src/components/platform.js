@@ -159,7 +159,8 @@ function getPlatform () {
   else if (document.location.href.indexOf('chrome-extension://') === 0) {
     browser.chromeExt = true
   }
-  else if (window._cordovaNative || document.location.href.indexOf('http') !== 0) {
+  else if (window._cordovaNative || browser.ios || document.location.href.indexOf('http') !== 0) {
+    // android的cordova会在cordova.js加载前设置全局变量_cordovaNative，但ios不会，暂时直接把iOS当作cordova平台
     browser.cordova = true
   }
 

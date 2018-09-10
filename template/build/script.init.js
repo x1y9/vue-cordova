@@ -4,7 +4,7 @@ var
   path = require('path'),
   fse = require('fs-extra'),
   spawn = require('./spawn'),
-  platform = process.argv[2] || (process.platform === 'win32' ? 'andorid' : 'ios')
+  platform = process.argv[2] || (process.platform === 'win32' ? 'android' : 'ios')
 
 var platformPath = path.resolve(__dirname, '../cordova/platforms/' + platform)
 if (shell.test('-d',platformPath)) {

@@ -10,12 +10,6 @@
       "required": true,
       "label": "App package ID",
       "default": "me.i38.app"
-    },    
-    "cordovaAndroidVer": {
-      "type": "string",
-      "required": true,
-      "label": "Cordova-android version(change only you konw)",
-      "default": "6.3.0"
     },
     "productZH": {
       "type": "string",

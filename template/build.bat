@@ -32,12 +32,12 @@ call npm run init
 @goto end
 
 :do_debug
-call npm run cordova android
+call npm run debug android %2
 echo if dev server not running, using `start build dev` to start it.
 @goto end
 
 :do_release
-call npm run android %2
+call npm run build android %2
 @IF %ERRORLEVEL% NEQ 0 goto error_end
 @goto end
 
@@ -48,6 +48,7 @@ call npm run %1 %2
 
 :do_picture
 convert src\assets\icon.png -resize 512x publish\icon512.png
+convert src\assets\icon.png -resize 114x publish\icon114.png
 convert -size 1024x500  radial-gradient:#8c8ca4-#232050 ~bg.png
 convert src\assets\icon.png -background none -pointsize 36 -size 480x -fill "#e7e7e7" -gravity center caption:"App slogan" -append ~slogan.png
 composite -gravity center ~slogan.png ~bg.png publish\feature.jpg

@@ -11,6 +11,6 @@ module.exports = {
   theme: process.env.THEME || config.defaultTheme,
   
   platform: {
-    cordovaAssets: './cordova/platforms/' + (process.env.CORDOVA_TARGET === 'ios' ? 'ios' : 'android') + '/platform_www'
+    cordovaAssets: './cordova/platforms/' + (process.platform === 'win32' ? 'android' : 'ios') + '/platform_www'
   }
 }

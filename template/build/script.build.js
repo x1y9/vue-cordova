@@ -1,4 +1,6 @@
 process.env.NODE_ENV = 'production'
+process.env.CORDOVA_TARGET = process.argv[2] || 'desktop'
+process.env.THEME = process.argv[3] || ''
 
 require('colors')
 
@@ -38,6 +40,7 @@ function finalize () {
   let doc = et.parse(fs.readFileSync(configFile, 'utf-8'))
   let packageId = doc.getroot().get('id')  
   let packageVer = doc.getroot().get('version') 
+  let icon = doc.getroot().find('icon')
 
   if (env.android) {
     spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
@@ -75,6 +78,19 @@ function finalize () {
         spawn.sync('adb',['install', '-r', targetApk])
       }      
     }
+  }
+
+  if (env.ios) {
+    console.log('remove icon for ios')
+    fse.copySync(configFile, configFile + '.temp')
+    doc.getroot().remove(icon)
+    fs.writeFileSync(configFile, doc.write({ indent: 4 }), 'utf8')
+
+    //--release还不行
+    spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
+    spawn.sync('cordova',['build', 'ios', '--debug'], path.resolve(__dirname, '../cordova'))
+
+    fse.copySync(configFile + '.temp', configFile)
   }
 }
 

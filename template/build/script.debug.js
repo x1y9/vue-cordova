@@ -32,17 +32,19 @@ if (shell.test('-d', path.resolve(__dirname, `../cordova/platforms/${process.env
   if (hasPhone) {
     console.log("set cordova config file remote ip:" + ip.address())
     fse.copySync(configFile, configFile + '.temp')
-    doc.getroot().find('content').set('src', 'http://' + ip.address() + ':8080')
+    doc.getroot().find('content').set('src', 'http://' + ip.address() + ':8080?cordova')
     if (env.ios) {
       doc.getroot().remove(icon)
       spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
     }
     fs.writeFileSync(configFile, doc.write({ indent: 4 }), 'utf8')
 
-    spawn.sync('cordova',['run', process.env.CORDOVA_TARGET], path.resolve(__dirname, '../cordova'))
-
-    console.log("restore cordova config file")
-    fse.copySync(configFile + '.temp',configFile)
+    try {
+      spawn.sync('cordova',['run', process.env.CORDOVA_TARGET], path.resolve(__dirname, '../cordova'))
+    } finally {
+      console.log("restore cordova config file")
+      fs.rename(configFile + '.temp',configFile)
+    }
   }
   else {
     console.log(`No mobile phone found, please connect your phone with usb\n`)  

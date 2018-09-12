@@ -1,6 +1,5 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-mixed-operators */
-
 function getUserAgent () {
   return (navigator.userAgent || navigator.vendor || window.opera).toLowerCase()
 }
@@ -159,8 +158,8 @@ function getPlatform () {
   else if (document.location.href.indexOf('chrome-extension://') === 0) {
     browser.chromeExt = true
   }
-  else if (window._cordovaNative || browser.ios || document.location.href.indexOf('http') !== 0) {
-    // android的cordova会在cordova.js加载前设置全局变量_cordovaNative，但ios不会，暂时直接把iOS当作cordova平台
+  else if (window._cordovaNative || document.location.href.indexOf('cordova') !== -1 || document.location.href.indexOf('http') !== 0) {
+    // android的cordova会在cordova.js加载前设置全局变量_cordovaNative，可惜iOS没有，只能通过url识别，分别要是识别dev和非dev模式
     browser.cordova = true
   }
 

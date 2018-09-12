@@ -87,10 +87,12 @@ function finalize () {
     fs.writeFileSync(configFile, doc.write({ indent: 4 }), 'utf8')
 
     //--release还不行
-    spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
-    spawn.sync('cordova',['build', 'ios', '--debug'], path.resolve(__dirname, '../cordova'))
-
-    fse.copySync(configFile + '.temp', configFile)
+    try {
+      spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
+      spawn.sync('cordova',['build', 'ios', '--debug'], path.resolve(__dirname, '../cordova'))
+    } finally {
+      fs.rename(configFile + '.temp', configFile)
+    }
   }
 }
 

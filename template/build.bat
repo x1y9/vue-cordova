@@ -17,8 +17,8 @@
 @echo build script for cordova-vue project
 @echo usage: build [prepare^|dev^|build^|debug^|release^|version^|clean^|picture]
 @echo.
-@echo For destkop: using dev and build
-@echo For android: using debug, release
+@echo For destkop: build [dev^|build] [theme]
+@echo For android: build [prepare^|debug^|release] [theme]
 @goto end
 
 :do_prepare

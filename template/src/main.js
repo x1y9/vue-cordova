@@ -18,6 +18,15 @@ Vue.use(VueI18n)
 Vue.prototype.$invoke = require('lodash/invoke')
 
 // icon：material很多图标不能在android4.4显示，fontawesome比ionicons大些
+// animejs比animate.css兼容性更好
+import animejs from 'animejs'
+Vue.directive('anime', {
+  bind (el, binding) {
+    const opts = Object.assign({}, binding.value, { targets: el })
+    animejs(opts)
+  }
+})
+Vue.prototype.$anime = animejs
 
 // 安装platform
 import platform from './components/platform'

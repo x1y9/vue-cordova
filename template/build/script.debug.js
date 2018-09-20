@@ -51,5 +51,5 @@ if (shell.test('-d', path.resolve(__dirname, `../cordova/platforms/${process.env
   }  
 }
 else {  
-  console.log(`Platfrom ${process.env.CORDOVA_TARGET} not found, please do prepare firstly.\n`)
+  console.log(`Platform ${process.env.CORDOVA_TARGET} not found, please do prepare firstly.\n`)
 }

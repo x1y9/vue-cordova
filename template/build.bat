@@ -4,6 +4,7 @@
 @if  "%1"=="prepare" goto do_prepare
 @if  "%1"=="debug" goto do_debug
 @if  "%1"=="release" goto do_release
+@if  "%1"=="publish" goto do_publish
 @if  "%1"=="picture" goto do_picture
 
 @if  "%1"=="version" goto do_npm
@@ -15,10 +16,10 @@
 :do_help
 @echo.
 @echo build script for cordova-vue project
-@echo usage: build [prepare^|dev^|build^|debug^|release^|version^|clean^|picture]
+@echo usage: build [prepare^|dev^|build^|debug^|release^|publish^|version^|clean^|picture]
 @echo.
 @echo For destkop: build [dev^|build] [theme]
-@echo For android: build [prepare^|debug^|release] [theme]
+@echo For android: build [prepare^|debug^|release^|publish] [theme]
 @goto end
 
 :do_prepare
@@ -38,6 +39,11 @@ echo if dev server not running, using `start build dev` to start it.
 
 :do_release
 call npm run build android %2
+@IF %ERRORLEVEL% NEQ 0 goto error_end
+@goto end
+
+:do_publish
+call npm run publish android %2
 @IF %ERRORLEVEL% NEQ 0 goto error_end
 @goto end
 

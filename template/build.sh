@@ -25,6 +25,10 @@ if [ "$1" = "release" ]; then
   npm run build $2 $3
 fi
 
+if [ "$1" = "publish" ]; then
+  npm run publish $2 $3
+fi
+
 if [ "$1" = "version" ] || [ "$1" = "dev" ] || [ "$1" = "build" ] || [ "$1" = "clean" ]; then
   npm run $1 $2
 fi

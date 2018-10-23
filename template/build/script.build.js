@@ -45,7 +45,7 @@ function finalize () {
   if (env.android) {
     spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
 
-    let targetApk = packageId + '-' + packageVer + '.apk'
+    let targetApk = packageId + (env.publish ? '-' + packageVer : '') + '.apk'
     let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-release.apk'
    
     //兼容处理cordova-android 6.3/6.4/7.x

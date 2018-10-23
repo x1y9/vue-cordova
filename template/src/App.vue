@@ -15,7 +15,7 @@ export default {
   },
   mounted () {
     // 初始化store
-    this.$store.commit('initStore')
+    this.$store.commit('initStore', this.$platform)
 
     if (this.$platform.is.cordova) {
       cordova.getAppVersion.getVersionNumber((version) => {
@@ -23,14 +23,9 @@ export default {
       })
 
       // android 4.4 没有screen.orientation
-      if (screen.orientation) {
-        screen.orientation.lock('portrait')
-      }
-
-      if (cordova.platformId === 'android') {
-        // .hide()
-        window.StatusBar.backgroundColorByHexString('#66bb6a')
-      }
+      this.$invoke(screen, 'orientation.lock', 'portrait')
+      window.StatusBar.overlaysWebView(false)
+      // window.StatusBar.styleDefault()
     }
     this.inited = true
   },

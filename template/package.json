@@ -10,6 +10,7 @@
     "init": "node build/script.init.js",
     "dev": "node build/script.dev.js",
     "build": "node build/script.build.js",
+    "publish": "node build/script.publish.js",
     "debug": "node build/script.debug.js",
     "version": "node build/script.version.js",
     "lint": "eslint --ext .js,.vue src"

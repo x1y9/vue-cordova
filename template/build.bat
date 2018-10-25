@@ -2,10 +2,12 @@
 @if  "%1"=="" goto do_help
 
 @if  "%1"=="prepare" goto do_prepare
-@if  "%1"=="debug" goto do_debug
-@if  "%1"=="release" goto do_release
-@if  "%1"=="publish" goto do_publish
 @if  "%1"=="picture" goto do_picture
+
+@if  "%1"=="remote" goto do_android
+@if  "%1"=="debug" goto do_android
+@if  "%1"=="release" goto do_android
+@if  "%1"=="publish" goto do_android
 
 @if  "%1"=="version" goto do_npm
 @if  "%1"=="dev" goto do_npm
@@ -14,13 +16,16 @@
 
 
 :do_help
-@echo.
 @echo build script for cordova-vue project
-@echo usage: build [prepare^|dev^|build^|debug^|release^|publish^|version^|clean^|picture]
 @echo.
-@echo For destkop: build [dev^|build] [theme]
-@echo For android: build [prepare^|debug^|release^|publish] [theme]
-@goto end
+@echo Destkop: build [dev^|build] [theme]
+@echo Android: build [prepare^|remote^|debug^|release^|publish] [theme]
+@echo Clean:   build clean [all]
+@echo Version: build version [major^|minor^|patch]
+@echo Store:   build picture
+@echo For IOS, using a OSX dev machine.
+
+ @goto end
 
 :do_prepare
 @REM 准备构建需要的库
@@ -32,19 +37,10 @@ call npm run init
 @for /d %%a in ("cordova\platforms\android\app\src\main\res\drawable*") do del "%%~a\screen.png" > nul 2>&1
 @goto end
 
-:do_debug
-call npm run debug android %2
-echo if dev server not running, using `start build dev` to start it.
-@goto end
-
-:do_release
-call npm run build android %2
+:do_android
+call npm run %1 android %2
 @IF %ERRORLEVEL% NEQ 0 goto error_end
-@goto end
-
-:do_publish
-call npm run publish android %2
-@IF %ERRORLEVEL% NEQ 0 goto error_end
+@if "%1"=="remote" echo if dev server not running, using `start build dev` to start it.
 @goto end
 
 :do_npm

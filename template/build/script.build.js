@@ -43,42 +43,51 @@ function finalize () {
   let icon = doc.getroot().find('icon')
 
   if (env.android) {
-    //先clean一下，否则在有签名并release build的时候可能会包含老的assets
-    spawn.sync('cordova',['clean', 'android'], path.resolve(__dirname, '../cordova'))
-    spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
-
-    let targetApk = packageId + (env.publish ? '-' + packageVer : '') + '.apk'
-    let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-release.apk'
-   
-    //兼容处理cordova-android 6.3/6.4/7.x
-    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
-      sourceApk = '../cordova/platforms/android/build/outputs/apk/release/android-release.apk'
+    if (process.env.CORDOVA_OUTPUT === 'debug') {
+      let devices = spawn.getOutput('adb',['devices'])
+      console.log(devices.stdout)
+      if (devices.stdout.match(/device$/)) {
+        spawn.sync('cordova',['run', 'android'], path.resolve(__dirname, '../cordova'))
+      }
     }
-    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
-      sourceApk = '../cordova/platforms/android/app/build/outputs/apk/release/app-release.apk'
-    }
-    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
-      console.log('Release apk not found, check build errors')
-      process.exit()
-    }
+    else {
+      //先clean一下，否则在有签名并release build的时候可能会包含老的assets
+      spawn.sync('cordova',['clean', 'android'], path.resolve(__dirname, '../cordova'))
+      spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
 
-    fse.copySync(
-      path.resolve(__dirname, sourceApk), 
-      path.resolve(__dirname, '../' + targetApk))
-    console.log('Release apk file: ' + targetApk.yellow)
+      let targetApk = packageId + (env.publish ? '-' + packageVer : '') + '.apk'
+      let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-release.apk'
+    
+      //兼容处理cordova-android 6.3/6.4/7.x
+      if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+        sourceApk = '../cordova/platforms/android/build/outputs/apk/release/android-release.apk'
+      }
+      if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+        sourceApk = '../cordova/platforms/android/app/build/outputs/apk/release/app-release.apk'
+      }
+      if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+        console.log('Release apk not found, check build errors')
+        process.exit()
+      }
 
-    let devices = spawn.getOutput('adb',['devices'])
-    console.log(devices.stdout)
-    if (devices.stdout.match(/device$/)) {
-      console.log('try to install apk to device')
-      let result = spawn.getOutput('adb',['install','-r',targetApk])
-      console.log(result.stderr)
-      if (result.stdout.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ||
-          result.stderr.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ) {
-        console.log("apk INCOMPATIBLE, uninstall and reinstall...")
-        spawn.sync('adb',['uninstall',packageId])
-        spawn.sync('adb',['install', '-r', targetApk])
-      }      
+      fse.copySync(
+        path.resolve(__dirname, sourceApk), 
+        path.resolve(__dirname, '../' + targetApk))
+      console.log('Release apk file: ' + targetApk.yellow)
+
+      let devices = spawn.getOutput('adb',['devices'])
+      console.log(devices.stdout)
+      if (devices.stdout.match(/device$/)) {
+        console.log('try to install apk to device')
+        let result = spawn.getOutput('adb',['install','-r',targetApk])
+        console.log(result.stderr)
+        if (result.stdout.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ||
+            result.stderr.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ) {
+          console.log("apk INCOMPATIBLE, uninstall and reinstall...")
+          spawn.sync('adb',['uninstall',packageId])
+          spawn.sync('adb',['install', '-r', targetApk])
+        }      
+      }
     }
   }
 

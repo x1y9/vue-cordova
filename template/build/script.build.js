@@ -43,6 +43,8 @@ function finalize () {
   let icon = doc.getroot().find('icon')
 
   if (env.android) {
+    //先clean一下，否则在有签名并release build的时候可能会包含老的assets
+    spawn.sync('cordova',['clean', 'android'], path.resolve(__dirname, '../cordova'))
     spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
 
     let targetApk = packageId + (env.publish ? '-' + packageVer : '') + '.apk'

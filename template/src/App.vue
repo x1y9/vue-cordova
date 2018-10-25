@@ -10,7 +10,7 @@
 export default {
   data () {
     return {
-      inited: true
+      inited: false
     }
   },
   mounted () {
@@ -23,7 +23,7 @@ export default {
       })
 
       // android 4.4 没有screen.orientation
-      this.$invoke(screen, 'orientation.lock', 'portrait')
+      this._invoke(screen, 'orientation.lock', 'portrait')
       window.StatusBar.overlaysWebView(false)
       // window.StatusBar.styleDefault()
     }

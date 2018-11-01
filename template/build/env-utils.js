@@ -8,6 +8,7 @@ module.exports = {
   cordova: process.env.CORDOVA_TARGET === 'android' || process.env.CORDOVA_TARGET === 'ios',
   android: process.env.CORDOVA_TARGET === 'android',
   publish: process.env.CORDOVA_OUTPUT === 'publish',
+  debug: process.env.CORDOVA_OUTPUT === 'debug',
   ios: process.env.CORDOVA_TARGET === 'ios',
   theme: process.env.THEME || config.defaultTheme,
   

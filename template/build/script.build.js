@@ -1,7 +1,6 @@
-process.env.NODE_ENV = 'production'
+process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 process.env.CORDOVA_TARGET = process.argv[2] || 'desktop'
 process.env.THEME = process.argv[3] || ''
-
 require('colors')
 
 var
@@ -15,20 +14,17 @@ var
   config = require('../config'),
   spawn = require('./spawn'),
   webpack = require('webpack'),
-  webpackConfig = require('./webpack.prod.conf'),
+  webpackConfig = require(env.dev ? './webpack.dev.conf' : './webpack.prod.conf'),
   targetPath = webpackConfig.output.path
 
 if (env.android && !shell.test('-f', path.resolve(__dirname, `../cordova/platforms/android/release-signing.properties`))) {
   console.log('Please modify ' + 'cordova/release-signing.sample'.yellow
   + ', then copy to ' + 'cordova/platforms/android/release-signing.properties'.yellow + ' for apk sign.')
-  process.exit()
+  process.exit(0)
 }
 
 shell.rm('-rf', targetPath)
 console.log(' Cleaned build artifacts.\n')
-  
-console.log(' WARNING!'.bold)
-console.log(' Do NOT use VueRouter\'s "history" mode for Cordova or Electron.\n')
 console.log((' Building with "' + env.theme + '" theme...\n').bold)
 
 shell.mkdir('-p', targetPath)
@@ -43,51 +39,45 @@ function finalize () {
   let icon = doc.getroot().find('icon')
 
   if (env.android) {
-    if (process.env.CORDOVA_OUTPUT === 'debug') {
-      let devices = spawn.getOutput('adb',['devices'])
-      console.log(devices.stdout)
-      if (devices.stdout.match(/device$/)) {
-        spawn.sync('cordova',['run', 'android'], path.resolve(__dirname, '../cordova'))
-      }
-    }
-    else {
-      //先clean一下，否则在有签名并release build的时候可能会包含老的assets
-      spawn.sync('cordova',['clean', 'android'], path.resolve(__dirname, '../cordova'))
-      spawn.sync('cordova',['build', 'android', '--release'], path.resolve(__dirname, '../cordova'))
-
-      let targetApk = packageId + (env.publish ? '-' + packageVer : '') + '.apk'
-      let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-release.apk'
+    let commitNo = spawn.getOutput('git',['rev-list', 'master', '--first-parent', '--count']).stdout.trim()
     
-      //兼容处理cordova-android 6.3/6.4/7.x
-      if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
-        sourceApk = '../cordova/platforms/android/build/outputs/apk/release/android-release.apk'
-      }
-      if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
-        sourceApk = '../cordova/platforms/android/app/build/outputs/apk/release/app-release.apk'
-      }
-      if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
-        console.log('Release apk not found, check build errors')
-        process.exit()
-      }
+    //不用clean，因为下面的输出文件被直接move，如果是copy，这里一定要clean，否则编译出来的文件可能越来越大    
+    let variant = env.debug ? 'debug' : 'release'
+    spawn.sync('cordova',['build', 'android', '--' + variant], path.resolve(__dirname, '../cordova'))
 
-      fse.copySync(
-        path.resolve(__dirname, sourceApk), 
-        path.resolve(__dirname, '../' + targetApk))
-      console.log('Release apk file: ' + targetApk.yellow)
+    let targetApk = env.publish ? packageId + '-' + packageVer  + '-' + commitNo + '.apk' : packageId + '-' + variant + '.apk'
+    let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-' + variant + '.apk'
+  
+    //兼容处理cordova-android 6.3/6.4/7.x
+    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+      sourceApk = '../cordova/platforms/android/build/outputs/apk/'+ variant + '/android-' + variant + '.apk'
+    }
+    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+      sourceApk = '../cordova/platforms/android/app/build/outputs/apk/' + variant + '/app-'+ variant + '.apk'
+    }
+    if (!shell.test('-f',path.resolve(__dirname, sourceApk))) {
+      console.log('Build apk not found, check build errors')
+      process.exit(0)
+    }
 
-      let devices = spawn.getOutput('adb',['devices'])
-      console.log(devices.stdout)
-      if (devices.stdout.match(/device$/)) {
-        console.log('try to install apk to device')
-        let result = spawn.getOutput('adb',['install','-r',targetApk])
-        console.log(result.stderr)
-        if (result.stdout.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ||
-            result.stderr.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ) {
-          console.log("apk INCOMPATIBLE, uninstall and reinstall...")
-          spawn.sync('adb',['uninstall',packageId])
-          spawn.sync('adb',['install', '-r', targetApk])
-        }      
-      }
+    // fse.copySync(
+    //   path.resolve(__dirname, sourceApk), 
+    //   path.resolve(__dirname, '../' + targetApk))
+    fs.rename(path.resolve(__dirname, sourceApk), path.resolve(__dirname, '../' + targetApk))  
+    console.log('Build apk file: ' + targetApk.yellow)
+
+    let devices = spawn.getOutput('adb',['devices'])
+    console.log(devices.stdout)
+    if (devices.stdout.match(/device$/)) {
+      console.log('try to install apk to device')
+      let result = spawn.getOutput('adb',['install','-r',targetApk])
+      console.log(result.stderr)
+      if (result.stdout.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ||
+          result.stderr.indexOf('INSTALL_FAILED_UPDATE_INCOMPATIBLE') != -1 ) {
+        console.log("apk INCOMPATIBLE, uninstall and reinstall...")
+        spawn.sync('adb',['uninstall',packageId])
+        spawn.sync('adb',['install', '-r', targetApk])
+      }      
     }
   }
 

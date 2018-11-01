@@ -13,8 +13,8 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 })
 
 module.exports = merge(baseWebpackConfig, {
-  // #cheap-module-eval-source-map在设置断点时错位，inline-source-map不错位, 导致hotload变慢。
-  devtool: '#inline-source-map',
+  // #cheap-module-eval-source-map在设置断点时错位，inline-source-map不错位, 导致hotload变慢，而且导致chrome远程调试自动断开
+  devtool: '#cheap-module-eval-source-map',
   devServer: {
     historyApiFallback: true,
     noInfo: true

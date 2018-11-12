@@ -16,6 +16,8 @@ Vue.prototype._invoke = require('lodash/invoke')
 Vue.prototype._set = require('lodash/set')
 Vue.prototype._get = require('lodash/get')
 Vue.prototype._merge = require('lodash/merge')
+Vue.prototype._defaults = require('lodash/defaults')
+Vue.prototype._defaultsDeep = require('lodash/defaultsDeep')
 Vue.prototype.$util = require('./components/util')
 
 // icon：material很多图标不能在android4.4显示，fontawesome比ionicons大些

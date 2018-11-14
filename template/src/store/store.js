@@ -8,7 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    persist: _defaultsDeep(util.loadConfig(), {      
+    persist: _defaultsDeep(util.loadConfig(), {
     }),
     global: {
       version: '1.0.0'

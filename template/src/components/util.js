@@ -16,4 +16,3 @@ export function loadConfig () {
 export function saveConfig (config) {
   localStorage.setItem('{{ name }}', JSON.stringify(config))
 }
-

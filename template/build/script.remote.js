@@ -30,9 +30,10 @@ if (shell.test('-d', path.resolve(__dirname, `../cordova/platforms/${process.env
   }
   
   if (hasPhone) {
-    console.log("set cordova config file remote ip:" + ip.address())
+    let remoteServer = process.argv[4] || (ip.address() + ':8080')
+    console.log("set cordova config file remote ip:" + remoteServer)
     fse.copySync(configFile, configFile + '.temp')
-    doc.getroot().find('content').set('src', 'http://' + ip.address() + ':8080?cordova')
+    doc.getroot().find('content').set('src', 'http://' + remoteServer + '?cordova')
     if (env.ios) {
       doc.getroot().remove(icon)
       spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))

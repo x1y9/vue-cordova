@@ -38,13 +38,13 @@ call npm run init
 @goto end
 
 :do_android
-call npm run %1 android %2
+call npm run %1 android %2 %3 %4
 @IF %ERRORLEVEL% NEQ 0 goto error_end
 @if "%1"=="remote" echo if dev server not running, using `start build dev` to start it.
 @goto end
 
 :do_npm
-call npm run %1 %2
+call npm run %1 %2 %3 %4
 @IF %ERRORLEVEL% NEQ 0 goto error_end
 @goto end
 

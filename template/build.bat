@@ -25,7 +25,7 @@
 @echo Store:   build picture
 @echo For IOS, using a OSX dev machine.
 
- @goto end
+@goto end
 
 :do_prepare
 @REM 准备构建需要的库

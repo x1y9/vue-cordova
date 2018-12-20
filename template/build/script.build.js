@@ -39,13 +39,11 @@ function finalize () {
   let icon = doc.getroot().find('icon')
 
   if (env.android) {
-    let commitNo = spawn.getOutput('git',['rev-list', 'master', '--first-parent', '--count']).stdout.trim()
-    
     //不用clean，因为下面的输出文件被直接move，如果是copy，这里一定要clean，否则编译出来的文件可能越来越大    
     let variant = env.debug ? 'debug' : 'release'
     spawn.sync('cordova',['build', 'android', '--' + variant], path.resolve(__dirname, '../cordova'))
 
-    let targetApk = env.publish ? packageId + '-' + packageVer  + '-' + commitNo + '.apk' : packageId + '-' + variant + '.apk'
+    let targetApk = env.publish ? packageId + '-' + packageVer + '.apk' : packageId + '-' + variant + '.apk'
     let sourceApk = '../cordova/platforms/android/build/outputs/apk/android-' + variant + '.apk'
   
     //兼容处理cordova-android 6.3/6.4/7.x

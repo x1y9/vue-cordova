@@ -44,7 +44,7 @@ if (shell.test('-d', path.resolve(__dirname, `../cordova/platforms/${process.env
       spawn.sync('cordova',['run', process.env.CORDOVA_TARGET], path.resolve(__dirname, '../cordova'))
     } finally {
       console.log("restore cordova config file")
-      fs.rename(configFile + '.temp',configFile)
+      fs.rename(configFile + '.temp',configFile, () => {})
     }
   }
   else {

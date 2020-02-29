@@ -61,7 +61,7 @@ function finalize () {
     // fse.copySync(
     //   path.resolve(__dirname, sourceApk), 
     //   path.resolve(__dirname, '../' + targetApk))
-    fs.rename(path.resolve(__dirname, sourceApk), path.resolve(__dirname, '../' + targetApk))  
+    fs.rename(path.resolve(__dirname, sourceApk), path.resolve(__dirname, '../' + targetApk), () => {})  
     console.log('Build apk file: ' + targetApk.yellow)
 
     let devices = spawn.getOutput('adb',['devices'])
@@ -90,7 +90,7 @@ function finalize () {
       spawn.sync('cordova-icon',['--icon=../src/assets/icon.png'], path.resolve(__dirname, '../cordova'))
       spawn.sync('cordova',['build', 'ios', '--debug'], path.resolve(__dirname, '../cordova'))
     } finally {
-      fs.rename(configFile + '.temp', configFile)
+      fs.rename(configFile + '.temp', configFile, () => {})
     }
   }
 }

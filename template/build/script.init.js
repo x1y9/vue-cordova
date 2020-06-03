@@ -12,8 +12,8 @@ if (shell.test('-d',platformPath)) {
 }
 else {  
   shell.mkdir('-p', path.resolve(__dirname, '../cordova/www'))
-  //cordova命令永远不会返回非0，所以下面的命令不会出错退出
-  spawn.sync('cordova',['platform','add', platform], path.resolve(__dirname, '../cordova'))
+  //cordova prepare比add platform add要好很多，可以遵守package.json中的版本
+  spawn.sync('cordova',['prepare', platform], path.resolve(__dirname, '../cordova'))
 
   if (shell.test('-d',platformPath)) {
     spawn.sync('npm',['install'], path.resolve(__dirname, '../cordova'))
